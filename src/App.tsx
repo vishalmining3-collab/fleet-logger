@@ -133,7 +133,7 @@ export default function App() {
     // The localStorage migration block below also upgrades any pre-existing "browser" setting.
     sttEngine: "cloud",
     backendUrl: navigator.userAgent.toLowerCase().includes("android")
-      ? "http://10.241.195.227:3000"
+      ? "https://fleet-logger-backend.onrender.com"
       : (typeof window !== "undefined" ? window.location.origin : "")
   });
 
@@ -255,9 +255,9 @@ export default function App() {
           parsed.sttEngine = "cloud";
           try { localStorage.setItem("fleet_settings", JSON.stringify(parsed)); } catch (e) {}
         }
-        // Migrate from old hardcoded LAN IP to the current LAN IP
-        if (parsed.backendUrl === "http://192.168.0.102:3000") {
-          parsed.backendUrl = "http://10.241.195.227:3000";
+        // Migrate from old hardcoded LAN IPs to the public Render backend URL
+        if (parsed.backendUrl === "http://192.168.0.102:3000" || parsed.backendUrl === "http://10.241.195.227:3000") {
+          parsed.backendUrl = "https://fleet-logger-backend.onrender.com";
         }
         try { localStorage.setItem("fleet_settings", JSON.stringify(parsed)); } catch (e) {}
         setSettings(parsed);
@@ -270,7 +270,7 @@ export default function App() {
         defaultCar: "WB 02 AB 1234",
         serverSync: true,
         sttEngine: "cloud",
-        backendUrl: "http://10.241.195.227:3000"
+        backendUrl: "https://fleet-logger-backend.onrender.com"
       };
       try {
         localStorage.setItem("fleet_settings", JSON.stringify(defaultSettings));
