@@ -21,12 +21,11 @@
 # =============================================================================
 
 # ---------- Stage 1: Install JS deps + build the React/Express bundle ----------
-FROM node:20-alpine AS build
+FROM node:20 AS build
 WORKDIR /app
 
-# Skip optional native builds (avoid expensive cmake/electron fetches)
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=optional || npm install --omit=optional
+RUN npm ci || npm install
 
 # Build the frontend bundle (Vite) + server bundle (esbuild)
 COPY . .
