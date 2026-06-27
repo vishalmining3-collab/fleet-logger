@@ -83,6 +83,9 @@ EXPOSE 3000
 HEALTHCHECK --interval=20s --timeout=5s --retries=3 --start-period=30s \
     CMD wget -q -O- http://127.0.0.1:3000/api/health >/dev/null || exit 1
 
+# Create data dir and set ownership so non-root 'node' user has write permissions
+RUN mkdir -p /app/data && chown -R node:node /app
+
 # Run as the built-in 'node' user (safer container posture).
 USER node
 WORKDIR /app
