@@ -67,7 +67,7 @@ COPY --from=build /app/tsconfig.json ./
 
 # Python sidecar + pinned dependencies
 COPY sidecar ./sidecar
-RUN pip3 install --no-cache-dir -r sidecar/requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir -r sidecar/requirements.txt
 
 # Init script that supervises the sidecar from the Node process. If the
 # sidecar dies, it restarts up to N times. If Node dies, the container exits
