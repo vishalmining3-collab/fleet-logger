@@ -1,0 +1,55 @@
+# =============================================================================
+# Render Blueprint: Fleet Logger (Express + Speech Sidecar)
+# =============================================================================
+# This file tells Render exactly how to deploy the app. Render scans this file
+# when you select "New Blueprint Instance" in the dashboard.
+#
+# Cost note: A single Docker web service on the Starter plan gets up to 500
+# hours/month for free (Windows/Linux OK). The speech sidecar and Express
+# server run together in one container (per /Dockerfile + /deploy/entrypoint.sh).
+#
+# Required secrets — you add these in the Render dashboard, NOT here:
+#   NVIDIA_API_KEY      nvapi-... Real key from build.nvidia.com
+#   TTS_FUNCTION_ID     Magpie Multilingual TTS function id (default already in sidecar)
+#   ASR_FUNCTION_ID     ai-parakeet-ctc-1_1b-asr-inworld function id (default in sidecar)
+#
+# Recommended secrets (optional):
+#   GEMINI_API_KEY      Fallback chat provider. NOT required if NVIDIA is up.
+#   SUPABASE_URL        Supabase project URL. Not required — app falls back to local data store.
+#   SUPABASE_SERVICE_ROLE_KEY  Service role JWT.
+#   NODE_ENV            "production" is automatically set by Render.
+# =============================================================================
+
+services:
+  - type: web
+    name: fleet-logger
+    runtime: docker
+    plan: starter
+    region: oregon                  # cheapest region; change to one closer to your client
+    branch: main                    # the Git branch Render builds from
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+    # env vars that are NOT secrets. Secrets go in the dashboard at
+    # https://dashboard.render.com/web/<service>/env  -- Render encrypts them.
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NPM_CONFIG_UPDATE_NOTIFIER
+        value: "false"
+      # Tell Express which port to bind (Render injects this, but pinning
+      # helps with proxied health checks)
+      - key: PORT
+        value: "3000"
+      # The Node server hits the sidecar at this address internally
+      - key: SIDECAR_URL
+        value: "http://127.0.0.1:5050"
+
+    # --- Secrets to set in the Render dashboard (NOT committed) ---
+    # 1. NVIDIA_API_KEY              (required for chat + ASR + TTS)
+    # 2. TTS_FUNCTION_ID             (optional override, default already works)
+    # 3. ASR_FUNCTION_ID             (optional overlay, default already works)
+    # 4. GEMINI_API_KEY              (optional fallback)
+    # 5. SUPABASE_URL                (optional persistent data store)
+    # 6. SUPABASE_SERVICE_ROLE_KEY   (optional)

@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net default-deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitive Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Entity validator for DutyEntry
+    function isValidDutyEntry(data) {
+      return data.keys().hasAll([
+        'id', 'date', 'carNumber', 'duty', 'inTime', 'outTime', 
+        'inKm', 'outKm', 'createdAt', 'updatedAt', 'deviceId', 'userId'
+      ])
+      && data.keys().size() == 12
+      && data.id is string && data.id.size() <= 128
+      && data.date is string && data.date.size() <= 64
+      && data.carNumber is string && data.carNumber.size() <= 32
+      && data.duty is string && data.duty.size() <= 128
+      && data.inTime is string && data.inTime.size() <= 10
+      && data.outTime is string && data.outTime.size() <= 10
+      && (data.inKm == null || data.inKm is int || data.inKm is float)
+      && (data.outKm == null || data.outKm is int || data.outKm is float)
+      && data.createdAt is int
+      && data.updatedAt is int
+      && data.deviceId is string && data.deviceId.size() <= 128
+      && data.userId is string && data.userId.size() <= 128;
+    }
+
+    // Match rules for entries collection
+    match /entries/{entryId} {
+      
+      // Get & List checks
+      allow get: if isSignedIn() && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+
+      // Create check
+      allow create: if isSignedIn() 
+        && isValidId(entryId)
+        && isValidDutyEntry(incoming())
+        && incoming().userId == request.auth.uid;
+
+      // Update check
+      allow update: if isSignedIn()
+        && isValidId(entryId)
+        && isValidDutyEntry(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == request.auth.uid
+        && incoming().id == existing().id
+        && incoming().createdAt == existing().createdAt
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'date', 'carNumber', 'duty', 'inTime', 'outTime', 
+            'inKm', 'outKm', 'updatedAt', 'deviceId'
+          ])
+        );
+
+      // Delete check
+      allow delete: if isSignedIn()
+        && isValidId(entryId)
+        && existing().userId == request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Fleet Logger",
+  "description": "A high-performance, voice-first Progressive Web Application (PWA) for drivers and fleet operators to log daily vehicle duties naturally using speech.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

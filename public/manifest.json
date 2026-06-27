@@ -1,0 +1,16 @@
+{
+  "short_name": "Fleet Logger",
+  "name": "Fleet Logger — Voice-First Intelligent PWA",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait"
+}

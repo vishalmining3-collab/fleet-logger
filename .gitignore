@@ -1,0 +1,73 @@
+# =============================================================================
+# Fleet Logger — git ignore rules
+# =============================================================================
+# Anything not in this file WILL potentially be uploaded to GitHub.
+# Keep this list strict — secrets, builds, and OS junk don't belong in version
+# control.
+# =============================================================================
+
+# ---- Node / Vite ----
+node_modules/
+build/
+dist/
+coverage/
+.nyc_output/
+
+# ---- Capacitor / Android build artifacts ----
+# We don't commit the compiled APK, but the build/ tool outputs *do* matter.
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/*.iml
+android/app/release/
+# Keep the gradle wrapper jar versioned; just keep *resource* caches out:
+android/.idea/
+android/.cxx/
+
+# ---- Env / secrets ----
+.env
+.env.*
+!.env.example
+api-keys.txt
+secrets/
+sidecar/secrets/
+
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+
+# ---- Logs / data ----
+*.log
+logs/
+
+# ---- IDE / OS junk ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ---- This agent's working artifacts (do not commit) ----
+.screenshots/
+.scrapes/
+*.mov
+*.mp4
+clipboard-*.txt
+
+# ---- Tooling caches ----
+.eslintcache
+.cache/
+.parcel-cache/
+.turbo/
+
+# ---- Local-only env overrides ----
+module.exports
+cypress/videos/
+cypress/screenshots/

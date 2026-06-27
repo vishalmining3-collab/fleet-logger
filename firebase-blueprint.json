@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "DutyEntry": {
+      "title": "DutyEntry",
+      "description": "A single fleet-logger record of vehicle duty log.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique uuid of the entry" },
+        "date": { "type": "string", "description": "YYYY-MM-DD date representation" },
+        "carNumber": { "type": "string", "description": "Registration plate of the vehicle" },
+        "duty": { "type": "string", "description": "Purpose or type of duty" },
+        "inTime": { "type": "string", "description": "Duty in time in HH:MM" },
+        "outTime": { "type": "string", "description": "Duty out time in HH:MM" },
+        "inKm": { "type": "number", "description": "Inward kilometer reading" },
+        "outKm": { "type": "number", "description": "Outward kilometer reading" },
+        "createdAt": { "type": "number", "description": "Epoch timestamp of creation" },
+        "updatedAt": { "type": "number", "description": "Epoch timestamp of modification" },
+        "deviceId": { "type": "string", "description": "Identifier of the client device" },
+        "userId": { "type": "string", "description": "User UID of the owner" }
+      },
+      "required": ["id", "date", "carNumber", "duty", "inTime", "outTime", "createdAt", "updatedAt", "deviceId", "userId"]
+    }
+  },
+  "firestore": {
+    "/entries/{entryId}": {
+      "schema": "DutyEntry",
+      "description": "Collection of driver duty entries, queryable and editable only by the authenticating author."
+    }
+  }
+}

@@ -1,0 +1,57 @@
+# Files that should never end up inside the Docker image.
+# Reducing context size makes `docker build` much faster.
+
+# Generated / installed
+node_modules
+node_modules/*
+dist
+dist/*
+.nyc_output
+coverage
+
+# Secrets — they live elsewhere in production (Render env vars, never in image)
+.env
+.env.*
+!.env.example
+secrets/
+sidecar/secrets/
+
+# Python caches + venvs
+__pycache__
+__pycache__/*
+*.pyc
+*.pyo
+.*.swp
+venv/
+.venv/
+env/
+
+# Build artifacts
+build/
+out/
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Mobile/Capacitor — the APK is a separate artifact, not the web/backend
+node_modules/.cache
+android/
+android/*
+ios/
+
+# Sidecar logs / data (other than the .py source)
+sidecar/logs/
+sidecar/data/
+
+# Read tool screenshots and brain dir (this agent's working artifacts)
+.screenshots
+*.mov
+*.mp4

@@ -1,0 +1,14 @@
+# Pinned Python dependencies for the Fleet Logger Speech Sidecar.
+# These power the /tts and /transcribe endpoints used by the Node backend.
+# Install with: pip install -r sidecar/requirements.txt
+#
+# Versions are minimum-major floors that match what the project was last
+# verified against. We avoid pinning minor versions exactly so pip's resolver
+# can pull compatible security updates without manual edits.
+
+fastapi>=0.128,<1.0            # Web framework hosting /tts and /transcribe
+uvicorn[standard]>=0.22,<1.0   # ASGI server (standard = websocket + http-tools)
+pydantic>=2.12,<3.0            # Request/response models for FastAPI
+grpcio>=1.80,<2.0              # gRPC client runtime for NVIDIA NVCF
+nvidia-riva-client>=2.26,<3.0  # NVIDIA Riva Parakeet ASR + Magpie TTS stubs
+python-dotenv>=1.0,<2.0        # Lets the sidecar pull SECRET values from .env
