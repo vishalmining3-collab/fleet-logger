@@ -38,7 +38,7 @@ FROM node:20-alpine AS runtime
 # glibc wheels via the python:3.11-slim image would also work; Alpine is
 # chosen because the base node:20-alpine already keeps the image small.
 RUN apk add --no-cache \
-        python3 python3-dev py3-pip \
+        python3 python3-dev py3-pip bash \
         libstdc++ libffi-dev openssl-dev build-base \
  && python3 --version \
  && pip3 --version
